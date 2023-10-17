@@ -21,7 +21,6 @@ async def confirm_from_seller(callback: CallbackQuery):
     buyer_person = buyer_person[0]
     seller_person = seller_person[0]
     need_car = need_car[0]
-    car_cost = need_car.price
 
     data_from_load_on_history_offers = {'seller': seller_person,
                                         'buyer': buyer_person,
@@ -29,8 +28,8 @@ async def confirm_from_seller(callback: CallbackQuery):
 
     OffersRequester.store_data(data_from_load_on_history_offers)
 
-    #Last touch
-
+    message_id = callback.message.message_id
+    await callback.message.chat.delete_message(callback.message.chat.id, message_id=message_id)
 
 
     #'confirm_from_seller:' + cars_id_range + ':to_buyer' + buyer_id)
