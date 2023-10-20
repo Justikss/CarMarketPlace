@@ -3,9 +3,12 @@ from aiogram.types import Message
 from utils.Lexicon import LEXICON
 from keyboards.inline.kb_creator import InlineCreator
 from handlers.callback_handlers.language_callback_handler import redis_data
+from handlers.callback_handlers.main_menu import clear_history_output
 
 
 async def bot_start(message: Message, state: FSMContext):
+    await clear_history_output(message)
+
     await state.clear()
     lexicon_part = LEXICON['choose_language']
     message_text = lexicon_part['message_text']

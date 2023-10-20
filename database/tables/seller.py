@@ -9,6 +9,7 @@ class Seller(BaseModel):
     dealship_name = CharField(null=True)
     entity = CharField(verbose_name='Лицо')
     dealship_address = CharField(null=True, verbose_name='Адрес салона')
+    dealship_name = CharField(null=True, verbose_name='Название салона')
     name = CharField(null=True, verbose_name='Имя')  # поле ограничено символами(название столбца)
     surname = CharField(null=True, verbose_name='Фамилия')  # поле ограничено символами(возможно нулевое значение, название столбца)
     patronymic = CharField(null=True, verbose_name='Отчество')
