@@ -13,10 +13,12 @@ class OffersRequester:
             return False
 
     @staticmethod
-    def retrieve_data_by_buyer_id(buyer_id: int):
-        try:
-            with db.atomic():
-                select_request = ActiveOffers.select().where(ActiveOffers.buyer == buyer_id).order_by(ActiveOffers.id.desc())
-                return list(select_request)
-        except Exception:
+    def get_for_buyer_id(buyer_id: int):
+        with db.atomic():
+            buyer_offers = ActiveOffers.select().where(ActiveOffers.buyer == buyer_id)
+            buyer_offers = list(buyer_offers)
+        if buyer_offers:
+            return buyer_offers
+        else:
+
             return False

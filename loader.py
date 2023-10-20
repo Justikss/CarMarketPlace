@@ -10,7 +10,7 @@ from handlers.pagination_message_editor import left_vector_pagination_handler, r
 from handlers.default_handlers import start, help, echo
 from handlers.callback_handlers import (language_callback_handler, callback_handler_start_buy,
                                         backward_callback_handler, search_auto_handler, confirm_search_config,
-                                        main_menu, confirm_from_seller_callback_handler)
+                                        main_menu, confirm_from_seller_callback_handler, show_offers_history)
 from handlers.state_handlers import buyer_registration_handlers
 from handlers.callback_handlers.callback_handler_start_buy import BuyerRegistationStates
 from handlers.state_handlers.choose_car_for_buy import hybrid_handlers, new_car_handlers, second_hand_car_handlers
@@ -40,6 +40,7 @@ async def start_bot():
     dp = Dispatcher(storage=storage)
 
 
+
     '''обраюотка Сообщений'''
     dp.message.register(start.bot_start, Command(commands=["start"]))
     dp.message.register(help.bot_help, Command(commands=["help"]))
@@ -62,9 +63,9 @@ async def start_bot():
                                F.data == 'car_search')
     dp.callback_query.register(search_auto_handler.search_configuration_handler,
                                F.data.in_(('second_hand_cars', 'new_cars')))
-
     dp.callback_query.register(confirm_search_config.confirm_settings_handler,
                                F.data == 'confirm_buy_settings')
+
     dp.callback_query.register(main_menu.main_menu,
                                F.data == 'return_main_menu')
     dp.callback_query.register(confirm_from_seller_callback_handler.confirm_from_seller,
@@ -73,6 +74,8 @@ async def start_bot():
                                F.data == 'left_vector')
     dp.callback_query.register(right_vector_pagination_handler,
                                F.data == 'right_vector')
+
+    dp.callback_query.register(show_offers_history.get_offers_history, F.data == 'offers_to_user')
 
 
 
