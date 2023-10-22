@@ -1,3 +1,5 @@
+import importlib
+
 from aiogram.filters import BaseFilter
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, chat
@@ -8,7 +10,8 @@ from handlers.state_handlers.buyer_registration_handlers import input_full_name
 class CorrectName(BaseFilter):
     async def __call__(self, message: Message, state: FSMContext):
         memory_storage = await state.get_data()
-        message_id = memory_storage['last_message']
+        redis_storage = importlib.import_module('utils.redis_for_language')  # Ленивый импорт
+        message_id = await redis_storage.redis_data.get_data(key=str(message.from_user.id) + ':last_message')
 
         user_full_name = message.text
         formatted_full_name = user_full_name.split(' ')
