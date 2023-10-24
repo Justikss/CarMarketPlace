@@ -213,4 +213,6 @@ LEXICON = {
 
 
 
+    'buttons_offers_history_for_buyer_output': {'left_vector': '<', 'right_vector': '>', 'return_main_menu': 'В меню', 'width': 2},
+    'non_history_data': {'message_text': 'Ваша история пуста, скорей оформите поисковой запрос!', 'return_main_menu': 'В меню', 'width': 1},
 

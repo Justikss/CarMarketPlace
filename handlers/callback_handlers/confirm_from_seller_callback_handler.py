@@ -43,6 +43,7 @@ async def confirm_from_seller(callback: CallbackQuery):
     OffersRequester.store_data(data_from_load_on_history_offers)
 #
 
+
     #Last touch
     redis_key = str(buyer_id) + ':active_non_confirm_offers'
 
@@ -77,6 +78,3 @@ async def confirm_from_seller(callback: CallbackQuery):
     else:
         print('gay')
 
-    await callback.answer()
-
-    #'confirm_from_seller:' + cars_id_range + ':to_buyer' + buyer_id)

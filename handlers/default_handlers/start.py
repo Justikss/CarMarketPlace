@@ -5,11 +5,14 @@ from aiogram.types import Message
 from utils.Lexicon import LEXICON
 from handlers.message_editor import InlineCreator
 from handlers.callback_handlers.language_callback_handler import redis_data
+from handlers.callback_handlers.main_menu import clear_history_output
 
 
 async def bot_start(message: Message, state: FSMContext):
+
     travel_editor = importlib.import_module('handlers.message_editor')
     redis_module = importlib.import_module('utils.redis_for_language')
+
 
     await state.clear()
     await message.delete()

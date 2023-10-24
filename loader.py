@@ -5,6 +5,7 @@ from aiogram.fsm.state import default_state
 from aiogram.fsm.storage.redis import Redis, RedisStorage
 from config_data.config import BOT_TOKEN
 from handlers.custom_filters.correct_name import CorrectName
+from handlers.pagination_message_editor import left_vector_pagination_handler, right_vector_pagination_handler
 
 '''РАЗДЕЛЕНИЕ НА БИБЛИОТЕКИ(/\) И КАСТОМНЫЕ МОДУЛИ(V)'''
 from handlers.default_handlers import start, help, echo
@@ -14,7 +15,7 @@ from handlers.callback_handlers import (language_callback_handler, callback_hand
                                         return_main_menu_from_offers_history, callback_handler_backward_in_carpooling,
                                         FAQ_tech_support)
 from handlers.state_handlers import buyer_registration_handlers
-from handlers.state_handlers.buyer_registration_handlers import BuyerRegistationStates
+from handlers.callback_handlers.callback_handler_start_buy import BuyerRegistationStates
 from handlers.state_handlers.choose_car_for_buy import hybrid_handlers, new_car_handlers, second_hand_car_handlers
 from states.new_car_choose_states import NewCarChooseStates
 from states.hybrid_choose_states import HybridChooseStates
@@ -80,6 +81,10 @@ async def start_bot():
                                F.data == 'return_main_menu')
     dp.callback_query.register(confirm_from_seller_callback_handler.confirm_from_seller,
                                lambda callback: callback.data.startswith('confirm_from_seller'))
+    dp.callback_query.register(left_vector_pagination_handler,
+                               F.data == 'left_vector')
+    dp.callback_query.register(right_vector_pagination_handler,
+                               F.data == 'right_vector')
 
     dp.callback_query.register(show_offers_history.get_offers_history, F.data == 'offers_to_user')
     dp.callback_query.register(show_offers_history.history_pagination_left, F.data == 'pagination_left')
