@@ -1,53 +1,85 @@
 import json
 from typing import Union
 
-import redis
+from redis import asyncio as aioredis
+
+
 
 
 class RedisRequester:
     def __init__(self):
-        self.redis_base = redis.StrictRedis(
+        self.redis_base = aioredis.StrictRedis(
             host='localhost',
-            charset="utf-8",
             decode_responses=True
         )
 
-    async def set_data(self, key: str,
-                       value: Union[set, list, str, float, dict]) -> bool:
-        '''Ассинхронный метод устанавливает значение языковому ключу в Redis
-        Даёт обратную связь
-        :rtype: bool
-        :key[str]: Ключ для записи в базу Redis
-        :value[Union[set, list, str, float, dict]]: значение для записи в базу Redis'''
-        if type(value) in (set, list, dict):
-            value = json.dumps(value)
+    async def set_data(self, key: str = None,
+                       value: Union[set, list, str, float, dict] = None,
+                       dicted_data: dict = None) -> bool:
+        if dicted_data:
+            for key, value in dicted_data.items():
+                if type(value) not in (int, float, str):
+                    value = await value
+                    value = json.dumps(value)
 
-        self.redis_base.set(key, value)
-        if self.redis_base.get(key) == value:
-            return True
+                await self.redis_base.set(key, value)
+                value_is_set = await self.redis_base.get(key) == value
+                if value_is_set:
+                    print('good', {key: value})
+                    pass
+                else:
+                    print('error', {key: value})
+                    await self.redis_base.close()
+                    return False
+
+            await self.redis_base.close()
+
         else:
-            return False
+            if type(value) not in (int, float, str):
 
-        redis_base.close()
+                value = json.dumps(value)
+#выдаёт false если числовое value(становится стр)
+            await self.redis_base.set(key, value)
+            if isinstance(value, int):
+                value_is_set = await self.redis_base.get(key) == str(value)
+            else:
+                value_is_set = await self.redis_base.get(key) == value
+            if value_is_set:
+                await self.redis_base.close()
+                print('good', {key: value})
+                return True
+            else:
+                await self.redis_base.close()
+                print('error', {key: value})
+                return False
 
     async def get_data(self, key: str, use_json=False) -> Union[bool, Union[set, list, str, float, dict]]:
-        '''Ассинхронный метод выдаёт значение по входящему ключу в Redis
-        Даёт обратную связь
-        :return: False | result
-        :rtype: Union[bool, Union[set, list, str, float, dict]]
-        :key: Ключ для записи в базу Redis
-        '''
-        result = self.redis_base.get(key)
-        print('redisult type', type(result))
-        if use_json:
+        result = await self.redis_base.get(key)
+        print('redisult-get type', type(result))
+        if use_json and result:
             result = json.loads(result)
 
         if result:
+            await self.redis_base.close()
+            print('good_get', {key: result})
             return result
         else:
+            await self.redis_base.close()
+            print('error_get', key)
             return False
 
-        redis_base.close()
+    async def delete_key(self, key: str):
+        # Удаляем ключ
+        result = await self.redis_base.delete(key)
+        if result == 1:
+            print(f"Ключ '{key}' успешно удален")
+            return True
+        else:
+            print(f"Ключ '{key}' не найден")
+            return False
+
+        # Закрываем соединение
+        await self.redis_base.close()
 
 
 redis_data = RedisRequester()

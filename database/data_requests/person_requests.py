@@ -46,13 +46,16 @@ class PersonRequester:
         '''вывод юзера по id юзера в бд'''
         if user:
             with db.atomic():
+                print('get_by_user_id', user_id)
                 select_request = User.select().where(User.telegram_id == user_id)
 
         elif seller:
             with db.atomic():
+                print('get_by_seller_id', user_id)
                 select_request = Seller.select().where(Seller.telegram_id == user_id)
 
         select_request = list(select_request)
+        print(select_request)
 
         if select_request:
             return select_request
@@ -72,7 +75,7 @@ seller = [{'telegram_id': '902230076',
 
 
 
-# PersonRequester.store_data(seller, seller=True)
+PersonRequester.store_data(seller, seller=True)
 
 sellers = PersonRequester.retrieve_all_data(seller=True)
 
