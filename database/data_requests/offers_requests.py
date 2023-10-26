@@ -69,4 +69,5 @@ class OffersRequester:
         if buyer_offers:
             return buyer_offers
         else:
+
             return False

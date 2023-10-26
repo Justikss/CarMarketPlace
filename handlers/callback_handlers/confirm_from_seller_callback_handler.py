@@ -82,6 +82,7 @@ async def confirm_from_seller(callback: CallbackQuery):
             await callback.answer('Принято')
             await callback.message.chat.delete_message(message_id=need_message_id)
 
+
             await redis_data.redis_data.set_data(
                 key=redis_key,
                 value=active_non_confirm_offers
@@ -89,6 +90,9 @@ async def confirm_from_seller(callback: CallbackQuery):
         else:
             print('gay')
 
+
         await callback.answer()
 
+
         #'confirm_from_seller:' + cars_id_range + ':to_buyer' + buyer_id)
+
